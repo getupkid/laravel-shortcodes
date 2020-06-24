@@ -184,7 +184,7 @@ class ShortcodeCompiler
     {
         // Set matches
         $this->setMatches($matches);
-        // pars the attributes
+        // parse the attributes
         $attributes = $this->parseAttributes($this->matches[3]);
 
         // return shortcode instance
@@ -283,7 +283,8 @@ class ShortcodeCompiler
         if (preg_match_all($pattern, preg_replace('/[\x{00a0}\x{200b}]+/u', " ", $text), $match, PREG_SET_ORDER)) {
             foreach ($match as $m) {
                 if (!empty($m[1])) {
-                    $attributes[strtolower($m[1])] = stripcslashes($m[2]);
+                    $m[1] = \Str::of($m[1])->camel()->__toString();
+                    $attributes[$m[1]] = stripcslashes($m[2]);
                 } elseif (!empty($m[3])) {
                     $attributes[strtolower($m[3])] = stripcslashes($m[4]);
                 } elseif (!empty($m[5])) {
@@ -297,7 +298,6 @@ class ShortcodeCompiler
         } else {
             $attributes = ltrim($text);
         }
-
         // return attributes
         return is_array($attributes) ? $attributes : [$attributes];
     }
